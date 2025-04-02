@@ -28,3 +28,10 @@ func DownloadFile(c *gin.Context) {
 func DeleteFile(c *gin.Context) {
     service.Delete(c)
 }
+
+func GetServerHealth(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"status":  "ok",
+		"message": "Server is healthy",
+	})
+}

@@ -24,6 +24,7 @@ func TestMainRouterRoutes(t *testing.T) {
 		method string
 		path   string
 	}{
+		{"GET", "/health"},
 		{"POST", "/upload"},
 		{"GET", "/files/test.txt"},
 		{"DELETE", "/files/test.txt"},

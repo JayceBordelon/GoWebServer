@@ -14,6 +14,7 @@ func setupRouter() *gin.Engine {
 	config.LoadConfig()
 	logger.Init()
 
+	r.GET("/health", handler.GetServerHealth)
 	r.POST("/upload", handler.UploadFile)
 	r.GET("/files/:filename", handler.DownloadFile)
 	r.DELETE("/files/:filename", handler.DeleteFile)
