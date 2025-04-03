@@ -1,36 +1,65 @@
 package handler
 
 import (
-	"go-file-server/internal/service"
-	"go-file-server/pkg/logger"
+	"errors"
 	"net/http"
+	"optifile/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-func UploadFile(c *gin.Context) {
-    err := service.Upload(c)
-    if err != nil {
-        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-        return
-    }
-    c.JSON(http.StatusOK, gin.H{"message": "upload successful"})
+type Handler struct {
+	Service service.FileService
 }
 
-
-func DownloadFile(c *gin.Context) {
-	filename := c.Param("filename")
-	logger.Info.Printf("Download requested for: %s", filename)
-
-	service.Download(c)
+func NewHandler(s service.FileService) *Handler {
+	return &Handler{Service: s}
 }
 
-func DeleteFile(c *gin.Context) {
-    service.Delete(c)
+func (h *Handler) UploadFile(c *gin.Context) {
+	err := h.Service.Upload(c)
+	if err != nil {
+		switch {
+		case errors.Is(err, errors.New("file already exists")):
+			c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "could not save file"})
+		}
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "file uploaded successfully"})
 }
 
-func GetServerHealth(c *gin.Context) {
-	c.JSON(200, gin.H{
+func (h *Handler) DownloadFile(c *gin.Context) {
+	data, filename, err := h.Service.Download(c)
+	if err != nil {
+		switch {
+		case errors.Is(err, errors.New("file not found")):
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		case errors.Is(err, errors.New("file decryption failed")):
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		default:
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "unexpected download error"})
+		}
+		return
+	}
+
+	c.Header("Content-Disposition", "attachment; filename="+filename)
+	c.Data(http.StatusOK, "application/octet-stream", data)
+}
+
+func (h *Handler) DeleteFile(c *gin.Context) {
+	err := h.Service.Delete(c)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "file deleted"})
+}
+
+func (h *Handler) GetServerHealth(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
 		"status":  "ok",
 		"message": "Server is healthy",
 	})

@@ -1,29 +1,37 @@
 package main
 
 import (
-	"go-file-server/internal/config"
-	"go-file-server/internal/handler"
-	"go-file-server/pkg/logger"
+	"optifile/internal/config"
+	"optifile/internal/handler"
+	"optifile/internal/service"
+	"optifile/middleware"
+	"optifile/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
 
-func setupRouter() *gin.Engine {
+func SetupRouter() *gin.Engine {
 	r := gin.Default()
 
 	config.LoadConfig()
 	logger.Init()
+	fileService := service.NewFileService()
+	h := handler.NewHandler(fileService)
 
-	r.GET("/health", handler.GetServerHealth)
-	r.POST("/upload", handler.UploadFile)
-	r.GET("/files/:filename", handler.DownloadFile)
-	r.DELETE("/files/:filename", handler.DeleteFile)
+	r.GET("/health", h.GetServerHealth)
+
+	auth := r.Group("/", middleware.AuthMiddleware())
+	{
+		auth.POST("/files", h.UploadFile)
+		auth.GET("/files/:filename", h.DownloadFile)
+		auth.DELETE("/files/:filename", h.DeleteFile)
+	}
 
 	return r
 }
 
 func main() {
-	r := setupRouter()
+	r := SetupRouter()
 	defer logger.Info.Printf("Server started on port: %s", config.AppConfig.Port)
 
 	r.Run(":" + config.AppConfig.Port)

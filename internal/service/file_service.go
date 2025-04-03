@@ -1,20 +1,31 @@
 package service
 
 import (
-	"go-file-server/internal/storage"
+	"optifile/internal/storage"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Upload(c *gin.Context) error {
-    return storage.SaveFile(c)
+type FileService interface {
+	Upload(c *gin.Context) error
+	Download(c *gin.Context) ([]byte, string, error)
+	Delete(c *gin.Context) error
 }
 
+type fileServiceImpl struct{}
 
-func Download(c *gin.Context) {
-    storage.ServeFile(c)
+func NewFileService() FileService {
+	return &fileServiceImpl{}
 }
 
-func Delete(c *gin.Context) {
-    storage.DeleteFile(c)
+func (fs *fileServiceImpl) Upload(c *gin.Context) error {
+	return storage.SaveFile(c)
+}
+
+func (fs *fileServiceImpl) Download(c *gin.Context) ([]byte, string, error) {
+	return storage.ServeFile(c)
+}
+
+func (fs *fileServiceImpl) Delete(c *gin.Context) error {
+	return storage.DeleteFile(c)
 }

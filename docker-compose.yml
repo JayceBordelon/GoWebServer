@@ -4,7 +4,13 @@ services:
     image: jaycebordelon/optifile-server:latest
     ports:
       - '8080:8080'
+    volumes:
+      - optifile-data:/app/uploads
     environment:
       - PORT=8080
       - UPLOAD_PATH=./uploads
       - APP_ENV=production
+
+volumes:
+  optifile-data:
+    name: optifile-data
