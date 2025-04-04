@@ -11,6 +11,12 @@ services:
       - UPLOAD_PATH=./uploads
       - APP_ENV=production
 
+  client:
+    build: ./client
+    image: jaycebordelon/optifile-client:latest
+    ports:
+      - '3000:3000'
+
 volumes:
   optifile-data:
     name: optifile-data
