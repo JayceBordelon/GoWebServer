@@ -1,7 +1,8 @@
 services:
   server:
-    build: .
+    build: ./file-server
     image: jaycebordelon/optifile-server:latest
+    container_name: optifile-server
     ports:
       - '8080:8080'
     volumes:
@@ -14,6 +15,7 @@ services:
   client:
     build: ./client
     image: jaycebordelon/optifile-client:latest
+    container_name: optifile-client
     ports:
       - '3000:3000'
 

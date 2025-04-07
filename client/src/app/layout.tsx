@@ -1,18 +1,36 @@
 import '@mantine/core/styles.css';
-import type { Metadata } from 'next';
-import { ThemeProvider } from '@providers/ThemeProvider';
+import '../global.css';
 
-export const metadata: Metadata = {
+import React, { ReactNode } from 'react';
+import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
+import AppShell from '@components/AppShell';
+import { theme } from '@lib/theme';
+
+export const metadata = {
   title: 'Optifile',
-  description: 'Store, serve, get, transform, and share files with ease.',
-  icons: ['/file.svg'],
+  description: 'Serve, share and transform your files with ease.',
+  icons: {
+    icon: '/files.svg',
+    shortcut: '/files.svg',
+    apple: '/files.svg',
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" {...mantineHtmlProps}>
+      <head>
+        <ColorSchemeScript />
+        <link rel="shortcut icon" href="/favicon.svg" />
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
+        />
+      </head>
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <MantineProvider theme={theme}>
+          <AppShell>{children}</AppShell>
+        </MantineProvider>
       </body>
     </html>
   );
