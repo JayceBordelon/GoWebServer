@@ -49,15 +49,15 @@ export const theme = createTheme({
 
   headings: {
     fontFamily: 'Fredoka, sans-serif',
-    fontWeight: '600',
+    fontWeight: '300',
     textWrap: 'balance',
     sizes: {
-      h1: { fontSize: rem(36), lineHeight: '1.2', fontWeight: '700' },
-      h2: { fontSize: rem(30), lineHeight: '1.3', fontWeight: '600' },
-      h3: { fontSize: rem(24), lineHeight: '1.4', fontWeight: '600' },
-      h4: { fontSize: rem(20), lineHeight: '1.4', fontWeight: '600' },
-      h5: { fontSize: rem(18), lineHeight: '1.5', fontWeight: '500' },
-      h6: { fontSize: rem(16), lineHeight: '1.5', fontWeight: '500' },
+      h1: { fontSize: rem(36), lineHeight: '1.2' },
+      h2: { fontSize: rem(30), lineHeight: '1.3' },
+      h3: { fontSize: rem(24), lineHeight: '1.4' },
+      h4: { fontSize: rem(20), lineHeight: '1.4' },
+      h5: { fontSize: rem(18), lineHeight: '1.5' },
+      h6: { fontSize: rem(16), lineHeight: '1.5' },
     },
   },
 

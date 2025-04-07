@@ -2,7 +2,7 @@ import { HealthReponse } from './types/responses/responses';
 
 export const getServerHealth = async (): Promise<HealthReponse> => {
   try {
-    const res = await fetch('http://localhost:8080/health', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_SERVER_URL}/health`, {
       next: { revalidate: 60 },
     });
 

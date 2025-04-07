@@ -6,7 +6,7 @@ import Header from './Header';
 
 export default function AppShell({ children }: { children: ReactNode }) {
   return (
-    <MantineAppShell header={{ height: 60 }} padding="md" withBorder={false}>
+    <MantineAppShell header={{ height: 60 }} py="md" px="0" withBorder={false}>
       <MantineAppShell.Header>
         <Header />
       </MantineAppShell.Header>
