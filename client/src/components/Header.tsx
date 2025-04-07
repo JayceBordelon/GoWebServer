@@ -1,6 +1,6 @@
 'use client';
 
-import { Anchor, Flex } from '@mantine/core';
+import { Flex } from '@mantine/core';
 import Logo from './Logo';
 
 export default function Header() {

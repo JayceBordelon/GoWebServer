@@ -1,10 +1,6 @@
 import { HealthReponse } from './types/responses/responses';
 
 export const getServerHealth = async (): Promise<HealthReponse> => {
-  if (process.env.NEXT_PHASE === 'phase-production-build') {
-    return { message: 'skipping health check', status: 'skipped (build time)' };
-  }
-
   try {
     const res = await fetch('http://localhost:8080/health', {
       next: { revalidate: 60 },
